@@ -4,6 +4,8 @@ A lightweight collaborative document editor inspired by Google Docs. Users can c
 
 This is a time-boxed product exercise focused on a reliable end-to-end experience.
 
+**Live demo:** [https://ajaia-docs-lite-six.vercel.app/](https://ajaia-docs-lite-six.vercel.app/)
+
 ## Features Implemented
 
 - Demo user switcher (Shawn Campo / Alex Rivera) with localStorage persistence
@@ -120,6 +122,8 @@ Tests cover:
 
 Build command: `next build`  
 Output: Next.js default
+
+Live deployment: [https://ajaia-docs-lite-six.vercel.app/](https://ajaia-docs-lite-six.vercel.app/)
 
 After deploy, open the live URL and run through the demo checklist in `SUBMISSION.md`.
 

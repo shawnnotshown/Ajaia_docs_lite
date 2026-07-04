@@ -2,9 +2,7 @@
 
 ## Live Product URL
 
-_Add your deployed Vercel URL here after deployment._
-
-Example: `https://ajaia-docs-lite.vercel.app`
+https://ajaia-docs-lite-six.vercel.app/
 
 ## Source Code Location
 

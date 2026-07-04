@@ -86,7 +86,7 @@ npm test
 
 After deploying to Vercel with Firebase env vars configured:
 
-1. Open the live URL
+1. Open the live URL: https://ajaia-docs-lite-six.vercel.app/
 2. Switch users
 3. Create, edit, share, and revoke access once
 4. Confirm no console/runtime blockers on the happy path
