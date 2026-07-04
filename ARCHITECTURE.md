@@ -2,10 +2,11 @@
 
 ## High-Level Overview
 
-Ajaia Docs Lite is a Next.js App Router application that stores documents and share relationships in Firebase Firestore. The UI is a client-rendered productivity surface with:
+Ajaia Docs Lite is a Next.js App Router application that stores documents, shares, presence, comments, and versions in Firebase Firestore. The UI is a client-rendered productivity surface with:
 
 - A dashboard for listing owned and shared documents
 - A Tiptap-based editor for rich-text editing
+- Role-based sharing, comments, presence, and version history
 - A demo user switcher that simulates authentication
 
 ```
@@ -21,6 +22,9 @@ Ajaia Docs Lite is a Next.js App Router application that stores documents and sh
 │ users              │
 │ documents          │
 │ document_shares    │
+│ document_presence  │
+│ document_comments  │
+│ document_versions  │
 └────────────────────┘
 ```
 
@@ -43,8 +47,8 @@ There is no custom backend API. The Next.js app talks directly to Firestore from
 
 ### Firebase Firestore
 
-- Document-oriented storage fits the `documents` / `document_shares` model
-- Simple client SDK for create/read/update/share flows
+- Document-oriented storage fits documents, shares, comments, presence, and versions
+- Simple client SDK for CRUD and `onSnapshot` listeners
 - No server to operate for this demo scope
 
 ### Vercel
@@ -84,9 +88,16 @@ Seeded demo users with fixed IDs:
 | `id`          | string | Composite `{documentId}_{userId}`             |
 | `document_id` | string | Shared document                               |
 | `user_id`     | string | User granted access                           |
+| `role`        | string | `viewer` \| `commenter` \| `editor`           |
 | `created_at`  | string | ISO timestamp                                 |
 
 The composite share ID prevents duplicate `document_id` + `user_id` pairs.
+
+### Supporting collections
+
+- **Presence** — who is currently viewing a document (`last_seen` heartbeat)
+- **Comments** — text comments with resolve state
+- **Versions** — snapshots of title/content on save for restore
 
 ## Document Access and Sharing Logic
 
@@ -101,12 +112,19 @@ A user may manage sharing only when:
 
 1. `document.owner_id === activeUser.id`
 
-Shared users may edit title and content in this version.
+Role capabilities:
+
+| Role | View | Comment | Edit body | Resolve comments | Manage shares |
+| ---- | ---- | ------- | --------- | ---------------- | ------------- |
+| owner | yes | yes | yes | yes | yes |
+| editor | yes | yes | yes | yes | no |
+| commenter | yes | yes | no | no | no |
+| viewer | yes | no | no | no | no |
 
 Helpers live in `lib/access.ts`:
 
-- `canAccess(doc, shares, userId)`
-- `canShare(doc, userId)`
+- `getUserRole`, `canAccess`, `canShare`
+- `canView`, `canComment`, `canEdit`, `canResolveComments`
 
 The editor page loads the document and its shares, then blocks unauthorized users with:
 
@@ -125,7 +143,8 @@ The editor page loads the document and its shares, then blocks unauthorized user
 1. Title or content changes update local state
 2. Debounce (800ms) triggers `updateDocument`
 3. Empty titles are normalized to `Untitled Document`
-4. UI shows `Saving…` / `Saved` / `Unable to save`
+4. A version snapshot is written best-effort
+5. UI shows `Saving…` / `Saved` / `Unable to save`
 
 ### Import
 
@@ -137,33 +156,39 @@ The editor page loads the document and its shares, then blocks unauthorized user
 ### Share
 
 1. Owner opens Share modal
-2. Selects the other demo user
+2. Selects the other demo user and a role
 3. Share record is written
 4. Recipient sees the document under **Shared with Me** after switching users
+
+### Presence and comments
+
+1. Opening a document joins presence and starts a heartbeat
+2. Presence and comments subscribe via Firestore `onSnapshot`
+3. Document body content is loaded once and saved on edit — it is **not** live-synced between clients
 
 ## Frontend Structure
 
 ```
 app/                  Routes and layout
-components/           UI building blocks
+components/           UI building blocks (editor, share, comments, presence, export)
 context/              Active user state
-lib/                  Firebase, access, import helpers
+lib/                  Firebase, access, import, comments, presence, versions, export
 types/                Shared TypeScript models
 tests/                Unit tests
 ```
 
 ## Tradeoffs and Intentionally Excluded Features
 
-To protect core functionality within the time limit, the following were intentionally deprioritized:
+Prioritized a reliable create → edit → persist → share loop, then added focused stretch features (roles, presence, comments, versions, export).
 
-- Real-time collaboration / multi-cursor editing
-- Live presence indicators
-- Comments or suggestion mode
-- Version history
-- Advanced permissions beyond owner and shared editor
+Intentionally deprioritized:
+
+- Live co-editing of document body content (no CRDT / OT)
+- Multi-cursor collaboration
 - Production authentication (Firebase Auth, sessions, OAuth)
-- Complex file types such as `.docx`
-- Mobile-first advanced layouts
-- Server-side access enforcement
+- Server-side access enforcement (Firestore rules are open for demo)
+- DOCX import/export
+- True PDF file generation (export uses browser print)
+- Full CommonMark import fidelity
 
-These exclusions keep the product focused on a reliable create → edit → persist → share loop that reviewers can complete end to end.
+These exclusions keep the product focused on a reviewable end-to-end path within the timebox.

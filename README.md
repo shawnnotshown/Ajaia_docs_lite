@@ -1,22 +1,28 @@
 # Ajaia Docs Lite
 
-A lightweight collaborative document editor inspired by Google Docs. Users can create, edit, format, save, import, and share documents between two seeded demo users.
+A lightweight collaborative document editor inspired by Google Docs. Users can create, edit, format, save, import, share, comment, and export documents between two seeded demo users.
 
 This is a time-boxed product exercise focused on a reliable end-to-end experience.
 
 **Live demo:** [https://ajaia-docs-lite-six.vercel.app/](https://ajaia-docs-lite-six.vercel.app/)
 
+**Submission materials:** [Google Drive folder](https://drive.google.com/drive/folders/1tFxRxPMcFfa-GBVKZ5TFNb-q3Bf2mTPK?usp=sharing) · [Walkthrough video](https://drive.google.com/file/d/1RPxKP5u5Sri5KLvzXHIdTcTFaHCsFIpk/view?usp=sharing)
+
 ## Features Implemented
 
 - Demo user switcher (Shawn Campo / Alex Rivera) with localStorage persistence
 - Document dashboard with **My Documents** and **Shared with Me**
-- Create new documents with default title and empty rich-text content
+- Create, rename, and delete documents
 - Rich-text editor powered by Tiptap (bold, italic, underline, H1, H2, bullet/numbered lists)
 - Auto-save with debounce plus a manual Save button
 - Save status indicator (`Saving…`, `Saved`, `Unable to save`)
 - Import `.txt` and `.md` files (max 1 MB)
-- Document sharing between demo users (owner-only share management)
+- Role-based sharing: **viewer**, **commenter**, **editor** (owner-only share management)
 - Access-denied page for unauthorized documents
+- Live presence indicators for users currently viewing a document
+- Comments (add / resolve, role-aware)
+- Version history (snapshots on save, restore)
+- Export as Markdown or PDF (print-based PDF)
 - Automated unit tests for access and file validation helpers
 
 ## Tech Stack
@@ -110,7 +116,7 @@ npm run test:watch
 
 Tests cover:
 
-- Document access helpers (`canAccess`, `canShare`)
+- Document access helpers (`canAccess`, `canShare`, role permissions)
 - File import validation (type and size)
 
 ## Deployment (Vercel)
@@ -134,9 +140,9 @@ Use the **Switch user** panel in the left sidebar on the dashboard:
 1. Start as **Shawn Campo**.
 2. Create or import a document.
 3. Open the document and click **Share**.
-4. Grant access to **Alex Rivera**.
+4. Grant access to **Alex Rivera** as Viewer, Commenter, or Editor.
 5. Switch to **Alex Rivera** in the sidebar.
-6. Confirm the document appears under **Shared with Me**.
+6. Confirm the document appears under **Shared with Me** and role behavior matches.
 
 The active user is stored in `localStorage` and survives page refresh.
 
@@ -144,10 +150,11 @@ The active user is stored in `localStorage` and survives page refresh.
 
 - No real authentication (demo user switcher only)
 - Access control is frontend-only
-- No real-time multi-cursor collaboration
-- No comments, suggestions, or version history
-- No PDF/DOCX export or DOCX import
-- Shared users have full edit access (no role tiers beyond owner vs shared editor)
+- Document body is not live-synced between editors (presence and comments update in real time; content requires refresh)
+- No multi-cursor collaboration
+- No DOCX import/export
+- PDF export uses browser print, not a generated PDF file
+- Markdown import is best-effort (headings/lists), not full CommonMark fidelity
 - Firestore rules are intentionally open for the demo
 
 ## Project Scripts
@@ -166,3 +173,4 @@ The active user is stored in `localStorage` and survives page refresh.
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — system design and tradeoffs
 - [`AI_WORKFLOW.md`](./AI_WORKFLOW.md) — AI-assisted development notes
 - [`SUBMISSION.md`](./SUBMISSION.md) — submission details and demo checklist
+- [`WALKTHROUGH_VIDEO_URL.txt`](./WALKTHROUGH_VIDEO_URL.txt) — walkthrough video URL

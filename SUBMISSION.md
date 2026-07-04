@@ -5,7 +5,7 @@
 
 ## Links
 
-- **Google Drive folder:** YOUR_GOOGLE_DRIVE_FOLDER_LINK
+- **Google Drive folder:** https://drive.google.com/drive/folders/1tFxRxPMcFfa-GBVKZ5TFNb-q3Bf2mTPK?usp=sharing
 - **Live product:** https://ajaia-docs-lite-six.vercel.app/
 - **Walkthrough video:** https://drive.google.com/file/d/1RPxKP5u5Sri5KLvzXHIdTcTFaHCsFIpk/view?usp=sharing
 
@@ -39,7 +39,7 @@ No passwords. Use the sidebar **Switch user** panel:
 - `ARCHITECTURE.md` — prioritization and tradeoffs
 - `AI_WORKFLOW.md` — AI tools used, what was accepted/rejected, verification
 - `SUBMISSION.md` — deliverables checklist and demo path
-- Walkthrough video URL text file
+- `WALKTHROUGH_VIDEO_URL.txt` — walkthrough video URL
 
 ## Local setup
 
