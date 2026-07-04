@@ -1,76 +1,100 @@
-# Submission — Ajaia Docs Lite
+# Ajaia Docs Lite — Submission
 
-## Live Product URL
+**Candidate:** Shawn Mikel Parungao Campo  
+**Email:** s.mikelcampo@gmail.com
 
-https://ajaia-docs-lite-six.vercel.app/
+## Links
 
-## Source Code Location
+- **Google Drive folder:** YOUR_GOOGLE_DRIVE_FOLDER_LINK
+- **Live product:** https://ajaia-docs-lite-six.vercel.app/
+- **Walkthrough video:** https://drive.google.com/file/d/1RPxKP5u5Sri5KLvzXHIdTcTFaHCsFIpk/view?usp=sharing
 
-This repository root.
+## Demo credentials
 
-## Walkthrough Video URL
+No passwords. Use the sidebar **Switch user** panel:
 
-_Add your walkthrough video URL here._
-
-## Demo Credentials / Demo User Switching Instructions
-
-This app does not use passwords. Use the sidebar user switcher:
-
-| Name        | Email             |
-| ----------- | ----------------- |
+| Name | Email |
+| --- | --- |
 | Shawn Campo | shawn@example.com |
-| Alex Rivera | alex@example.com  |
+| Alex Rivera | alex@example.com |
 
-Suggested demo path:
+### Suggested review path
 
-1. Open the app as **Shawn Campo**.
-2. Click **New Document**.
-3. Rename the title and apply formatting (bold, heading, list).
-4. Refresh to confirm persistence.
-5. Click **Share** and grant access to **Alex Rivera**.
-6. Switch to **Alex Rivera** in the sidebar.
-7. Open the document from **Shared with Me** and edit it.
-8. Switch back to Shawn, open Share, and remove Alex.
-9. Switch to Alex again and confirm access is denied.
+1. Open the live app as **Shawn Campo**.
+2. Click **New Document**, rename the title, apply bold / heading / list formatting.
+3. Refresh to confirm persistence.
+4. Click **Share** and grant **Alex Rivera** access as **Editor** (or try Viewer / Commenter).
+5. Switch to **Alex Rivera** in the sidebar.
+6. Open the document under **Shared with Me** and confirm role behavior (edit vs comment-only vs view-only).
+7. As Shawn, open Comments and Version History; confirm presence when both users have the doc open.
+8. Export Markdown or PDF from the export menu.
+9. Switch back to Shawn, open Share, and remove Alex.
+10. Switch to Alex again and confirm access is denied.
+11. Optional: import a `.txt` or `.md` file (max 1 MB).
 
-## Included Files
+## Google Drive folder contents
 
-- `README.md` — setup and usage
-- `ARCHITECTURE.md` — system design and tradeoffs
-- `AI_WORKFLOW.md` — AI-assisted development notes
-- `SUBMISSION.md` — this file
-- `firestore.rules` — demo Firestore rules
-- `.env.example` — required environment variables
-- Application source under `app/`, `components/`, `context/`, `lib/`, `types/`, and `tests/`
+- Source code
+- `README.md` — local setup and run instructions
+- `ARCHITECTURE.md` — prioritization and tradeoffs
+- `AI_WORKFLOW.md` — AI tools used, what was accepted/rejected, verification
+- `SUBMISSION.md` — deliverables checklist and demo path
+- Walkthrough video URL text file
 
-## Features That Work
+## Local setup
+
+Prerequisites: Node.js 18+, npm, Firebase project with Firestore.
+
+```bash
+npm install
+cp .env.example .env.local
+# fill NEXT_PUBLIC_FIREBASE_* values
+npm run dev
+```
+
+Tests: `npm test`
+
+Full details are in `README.md` in the Drive folder.
+
+## What is working
 
 - Demo user switching with localStorage persistence
 - Create document and open editor
-- Rich-text editing with toolbar controls
-- Auto-save and manual save
-- Save status indicator
+- Rename document title
+- Rich-text editing (bold, italic, underline, H1/H2, bullet/numbered lists)
+- Auto-save and manual save, with save status indicator
+- Save and reopen documents after refresh
 - Import `.txt` and `.md` files (max 1 MB)
-- Share / unshare between demo users
-- Shared-with-me dashboard section
+- Share / unshare between demo users with role tiers (**viewer**, **commenter**, **editor**)
+- Visible distinction between owned documents and **Shared with Me**
 - Access-denied page for unauthorized documents
-- Empty states for document lists
-- Unit tests for access and import validation
+- Presence indicators for users currently viewing a document
+- Comments (add / resolve, role-aware)
+- Version history (save snapshots on edit, restore)
+- Export as Markdown and PDF (print-based PDF)
+- Document delete from the dashboard
+- Persistence via Firebase Firestore
+- Live deployment on Vercel
+- Unit tests for access helpers and import validation
 
-## Known Limitations
+## What is incomplete
 
-- Mocked authentication only
-- Frontend-enforced access control
-- No real-time collaboration
-- No comments, version history, or presence
-- No DOCX/PDF support
-- Open Firestore rules intended for demo use only
+- Mocked authentication only (no real login/passwords)
+- Frontend-enforced access control (Firestore rules open for demo use only)
+- Document body is not live-synced between editors (presence and comments update in real time; content requires refresh)
+- No DOCX import/export
+- PDF export uses browser print, not a generated PDF file
+- Markdown import is best-effort (headings/lists), not full CommonMark fidelity
 
-## What I Would Build Next With Another 2–4 Hours
+## What you would build next with another 2–4 hours
 
 1. Firebase Authentication (email magic link or anonymous auth mapped to demo personas)
 2. Server-side access checks via Firestore security rules using authenticated `request.auth.uid`
-3. Lightweight real-time listeners so shared editors see remote saves without refresh
-4. Document delete and rename-from-dashboard actions
-5. Better import preview and markdown fidelity
-6. End-to-end Playwright smoke tests for create → share → revoke
+3. Live document-content listeners so co-editors see remote saves without refresh
+4. Stronger markdown import fidelity and optional DOCX import
+5. True PDF file generation (instead of print dialog)
+6. End-to-end Playwright smoke tests for create → share by role → revoke
+
+## Stack
+
+Next.js 14, React, TypeScript, Firebase Firestore, Tiptap, Tailwind, Vitest, Vercel.
